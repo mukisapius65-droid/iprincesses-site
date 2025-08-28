@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPrincesses Dashboard</title>
+<title>iPrincesses</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#f0f0f5; }
+body { font-family: 'Segoe UI', sans-serif; margin:0; background:#f0f0f5; }
 header { background: #ff6f91; color:white; padding:15px; display:flex; justify-content: space-between; align-items:center; }
 header h1 { margin:0; font-size:1.5rem; }
 button { padding: 8px 15px; border:none; border-radius:5px; cursor:pointer; }
 button:hover { opacity:0.9; }
 .container { max-width:900px; margin:20px auto; padding:10px; }
 .card { background:white; padding:15px; border-radius:10px; margin:10px 0; box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-input, textarea { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+input, textarea, select { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
 .chat-box { max-height:200px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:5px; margin-bottom:10px; background:#f9f9f9;}
 .post { border-bottom:1px solid #eee; padding:10px 0; }
 .comment { padding-left:20px; font-size:0.9rem; color:#555; }
@@ -26,66 +26,23 @@ input, textarea { width:100%; padding:10px; margin:5px 0; border-radius:5px; bor
 </head>
 <body>
 
-<header>
-  <h1>iPrincesses Dashboard 👑</h1>
-  <button id="logout-btn">Logout</button>
-</header>
+<!-- Signup/Login forms -->
+<div id="auth-forms" class="container">
+  <h1>Welcome to iPrincesses ❤️</h1>
 
-<div class="container" id="dashboard">
+  <h2>Sign Up</h2>
+  <form id="signup-form">
+    <input type="email" id="signup-email" placeholder="Enter email" required><br>
+    <input type="password" id="signup-password" placeholder="Enter password" required><br>
+    <button type="submit">Sign Up</button>
+  </form>
 
-  <!-- User greeting -->
-  <div class="card flex">
-    <img src="https://i.pravatar.cc/40" class="avatar" id="user-avatar" />
-    <h2 id="welcome-msg">Hello, User!</h2>
-  </div>
-
-  <!-- Create Post -->
-  <div class="card">
-    <h3>Create Post</h3>
-    <textarea id="post-content" placeholder="Share your thoughts..."></textarea>
-    <input type="file" id="post-media" accept="image/*,video/*">
-    <button id="post-btn">Post</button>
-  </div>
-
-  <!-- Posts Feed -->
-  <div class="card">
-    <h3>Feed</h3>
-    <div id="posts-container"></div>
-  </div>
-
-  <!-- Chat Section -->
-  <div class="card">
-    <h3>Chat</h3>
-    <select id="room-select">
-      <option value="General">General</option>
-      <option value="Friends">Friends</option>
-      <option value="Support">Support</option>
-    </select>
-    <div class="chat-box" id="chat-box"></div>
-    <input type="text" id="chat-input" placeholder="Type message..." />
-    <button id="chat-send-btn">Send</button>
-  </div>
-
-  <!-- Location Sharing -->
-  <div class="card">
-    <h3>Share Your Location</h3>
-    <button id="share-location-btn">Share My Location</button>
-    <div class="map-container" id="map"></div>
-  </div>
-
-  <!-- Payment Options -->
-  <div class="card">
-    <h3>Payment Options (Uganda)</h3>
-    <button id="mtn-btn">Pay with MTN Mobile Money</button>
-    <button id="airtel-btn">Pay with Airtel Money</button>
-  </div>
-
-  <!-- Call Support -->
-  <div class="card">
-    <h3>Call</h3>
-    <button onclick="window.location.href='tel:+256700000000'">Call iPrincesses Support</button>
-  </div>
-
+  <h2>Login</h2>
+  <form id="login-form">
+    <input type="email" id="login-email" placeholder="Enter email" required><br>
+    <input type="password" id="login-password" placeholder="Enter password" required><br>
+    <button type="submit">Login</button>
+  </form>
 </div>
 
 <!-- Firebase -->
@@ -109,47 +66,130 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Logout
-document.getElementById("logout-btn").addEventListener("click",()=>auth.signOut());
+// SIGNUP
+document.getElementById("signup-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
 
-// Persist login and display user info
-auth.onAuthStateChanged(user=>{
-  if(user){
-    document.getElementById("welcome-msg").textContent=`Hello, ${user.email}! 👑`;
-    loadPosts();
-    loadChat();
-  } else {
-    Swal.fire('Logged out','Please log in again','info');
-    document.body.innerHTML='<h2 style="text-align:center;margin-top:50px;">You must log in to access dashboard</h2>';
-  }
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      Swal.fire('Signup successful', `Welcome ${userCredential.user.email}`, 'success');
+      showDashboard(userCredential.user);
+    })
+    .catch(error => Swal.fire('Error', error.message, 'error'));
 });
 
-// Create Post with Media
-document.getElementById('post-btn').addEventListener('click', async ()=>{
-  const content = document.getElementById('post-content').value;
-  const mediaFile = document.getElementById('post-media').files[0];
-  let mediaUrl = '';
+// LOGIN
+document.getElementById("login-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
 
-  if(mediaFile){
-    const storageRef = storage.ref('posts/' + Date.now() + '_' + mediaFile.name);
-    await storageRef.put(mediaFile);
-    mediaUrl = await storageRef.getDownloadURL();
-  }
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      Swal.fire('Login successful', `Hello ${userCredential.user.email}`, 'success');
+      showDashboard(userCredential.user);
+    })
+    .catch(error => Swal.fire('Error', error.message, 'error'));
+});
 
-  db.collection('posts').add({
-    content: content,
-    media: mediaUrl,
-    timestamp: Date.now(),
-    likes:0,
-    comments:[],
-    author: auth.currentUser.email
+// SHOW DASHBOARD FUNCTION
+function showDashboard(user){
+  document.body.innerHTML = `
+<header>
+  <h1>iPrincesses Dashboard 👑</h1>
+  <button id="logout-btn">Logout</button>
+</header>
+<div class="container" id="dashboard">
+
+  <div class="card flex">
+    <img src="https://i.pravatar.cc/40" class="avatar" />
+    <h2>Hello, ${user.email}!</h2>
+  </div>
+
+  <div class="card">
+    <h3>Create Post</h3>
+    <textarea id="post-content" placeholder="Share your thoughts..."></textarea>
+    <input type="file" id="post-media" accept="image/*,video/*">
+    <button id="post-btn">Post</button>
+  </div>
+
+  <div class="card">
+    <h3>Feed</h3>
+    <div id="posts-container"></div>
+  </div>
+
+  <div class="card">
+    <h3>Chat</h3>
+    <select id="room-select">
+      <option value="General">General</option>
+      <option value="Friends">Friends</option>
+      <option value="Support">Support</option>
+    </select>
+    <div class="chat-box" id="chat-box"></div>
+    <input type="text" id="chat-input" placeholder="Type message..." />
+    <button id="chat-send-btn">Send</button>
+  </div>
+
+  <div class="card">
+    <h3>Share Your Location</h3>
+    <button id="share-location-btn">Share My Location</button>
+    <div class="map-container" id="map"></div>
+  </div>
+
+  <div class="card">
+    <h3>Payment Options (Uganda)</h3>
+    <button id="mtn-btn">Pay with MTN Mobile Money</button>
+    <button id="airtel-btn">Pay with Airtel Money</button>
+  </div>
+
+  <div class="card">
+    <h3>Call</h3>
+    <button onclick="window.location.href='tel:+256700000000'">Call iPrincesses Support</button>
+  </div>
+</div>
+`;
+
+  // Logout
+  document.getElementById("logout-btn").addEventListener("click",()=>{
+    auth.signOut().then(()=>location.reload());
   });
 
-  document.getElementById('post-content').value='';
-  document.getElementById('post-media').value='';
-});
+  // Load posts and chat
+  loadPosts();
+  initChat();
+  initPost();
+  initLocation();
+}
 
-// Load posts
+// POSTS
+function initPost(){
+  document.getElementById('post-btn').addEventListener('click', async ()=>{
+    const content = document.getElementById('post-content').value;
+    const mediaFile = document.getElementById('post-media').files[0];
+    let mediaUrl = '';
+
+    if(mediaFile){
+      const storageRef = storage.ref('posts/' + Date.now() + '_' + mediaFile.name);
+      await storageRef.put(mediaFile);
+      mediaUrl = await storageRef.getDownloadURL();
+    }
+
+    db.collection('posts').add({
+      content: content,
+      media: mediaUrl,
+      timestamp: Date.now(),
+      likes:0,
+      comments:[],
+      author: auth.currentUser.email
+    });
+
+    document.getElementById('post-content').value='';
+    document.getElementById('post-media').value='';
+  });
+}
+
 function loadPosts(){
   const postsContainer = document.getElementById('posts-container');
   db.collection('posts').orderBy('timestamp','desc').onSnapshot(snapshot=>{
@@ -182,7 +222,6 @@ function loadPosts(){
   });
 }
 
-// Like and Comment
 function likePost(id,current){ db.collection('posts').doc(id).update({likes: current+1}); }
 function addComment(id){
   Swal.fire({title:'Add Comment',input:'text',showCancelButton:true,inputPlaceholder:'Write comment...'})
@@ -194,23 +233,28 @@ function addComment(id){
   });
 }
 
-// Chat with Rooms
+// CHAT
 let currentRoom = 'General';
-const chatBox = document.getElementById('chat-box');
-const chatInput = document.getElementById('chat-input');
-const chatSendBtn = document.getElementById('chat-send-btn');
-const roomSelect = document.getElementById('room-select');
+function initChat(){
+  const chatBox = document.getElementById('chat-box');
+  const chatInput = document.getElementById('chat-input');
+  const chatSendBtn = document.getElementById('chat-send-btn');
+  const roomSelect = document.getElementById('room-select');
 
-roomSelect.addEventListener('change',()=>{ currentRoom = roomSelect.value; loadChat(); });
+  roomSelect.addEventListener('change',()=>{ currentRoom = roomSelect.value; loadChat(); });
 
-chatSendBtn.addEventListener('click',()=>{
-  const msg = chatInput.value;
-  if(msg.trim()==='') return;
-  db.collection('chat').add({message:msg,timestamp:Date.now(),user:auth.currentUser.email,room:currentRoom});
-  chatInput.value='';
-});
+  chatSendBtn.addEventListener('click',()=>{
+    const msg = chatInput.value;
+    if(msg.trim()==='') return;
+    db.collection('chat').add({message:msg,timestamp:Date.now(),user:auth.currentUser.email,room:currentRoom});
+    chatInput.value='';
+  });
+
+  loadChat();
+}
 
 function loadChat(){
+  const chatBox = document.getElementById('chat-box');
   db.collection('chat').where('room','==',currentRoom).orderBy('timestamp').onSnapshot(snapshot=>{
     chatBox.innerHTML='';
     snapshot.forEach(doc=>{
@@ -221,7 +265,13 @@ function loadChat(){
   });
 }
 
-// Location
-document.getElementById('share-location-btn').addEventListener('click',()=>{
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(pos
+// LOCATION
+function initLocation(){
+  const mapContainer = document.getElementById('map');
+  document.getElementById('share-location-btn').addEventListener('click',()=>{
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(pos=>{
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        mapContainer.innerHTML = `<iframe width="100%" height="200" frameborder="0" style="border:0"
+          src="https://www.google.com/maps?q=${lat},${lon}&output
