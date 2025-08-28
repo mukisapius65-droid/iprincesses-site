@@ -27,10 +27,9 @@
   <!-- 🔒 Logout Button -->
   <button id="logout-btn" style="display:none;">Logout</button>
 
-  <!-- ✅ Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js"></script>
+  <!-- ✅ Firebase v8 SDKs (NOT v9) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <!-- ✅ Firebase Config -->
   <script>
@@ -45,9 +44,8 @@
     };
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const analytics = firebase.analytics();
   </script>
 
   <!-- ✅ Authentication Logic -->
