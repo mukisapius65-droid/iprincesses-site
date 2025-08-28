@@ -37,7 +37,59 @@
   <!-- Search Section -->
   <h2>Search</h2>
   <input type="text" id="search-input" placeholder="Search posts or users...">
-  <div id="search-results"></div>
+  <div id="search-results"></div>/* Floating Decorations */
+    .floating-decor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .float-img {
+      position: absolute;
+      width: 60px;
+      opacity: 0.8;
+      animation: floatAnim 10s linear infinite;
+    }
+
+    @keyframes floatAnim {
+      0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(-100px) translateX(200px) rotate(360deg);
+      }
+    }
+
+    /* Logout button */
+    #logout-btn {
+      display: none;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 10px;
+      background-color: #d63384;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to iPrincesses ❤️</h1>
+
+  <!-- Floating Hearts & Roses -->
+  <div class="floating-decor">
+    <img src="images/roses.png" alt="Roses" class="float-img">
+    <img src="images/heart.png" alt="Heart" class="float-img">
+    <img src="images/heart.png" alt="Heart" class="float-img">
+    <img src="images/roses.png" alt="Roses" class="float-img">
+  </div>
 
   <!-- Posts Section -->
   <h2>Posts</h2>
