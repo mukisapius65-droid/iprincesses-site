@@ -126,18 +126,19 @@
   <script>
     // ========= Firebase Config =========
     const firebaseConfig = {
-      apiKey: "REPLACE_ME_FIREBASE_API_KEY",
-      authDomain: "REPLACE_ME_PROJECT_ID.firebaseapp.com",
-      projectId: "REPLACE_ME_PROJECT_ID",
-      storageBucket: "REPLACE_ME_PROJECT_ID.appspot.com",
-      messagingSenderId: "REPLACE_ME_SENDER_ID",
-      appId: "REPLACE_ME_APP_ID"
+      apiKey: "AIzaSyBE7nyRgJU3-VEvnx_MgUJFcN7Qz04yT0g",
+      authDomain: "iprincesses-f4f94.firebaseapp.com",
+      projectId: "iprincesses-f4f94",
+      storageBucket: "iprincesses-f4f94.appspot.com", // ✅ fixed
+      messagingSenderId: "867887611060",
+      appId: "1:867887611060:web:f5c15533019c98d4c26be1",
+      measurementId: "G-7C9VZKX8MW"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // ========= UI Helpers =========
+    // ====== UI Helpers ======
     const $ = (id) => document.getElementById(id);
     const toast = (msg) => alert(msg);
     const whoamiEl = $("whoami");
@@ -155,7 +156,7 @@
       }
     });
 
-    // ========= AUTH =========
+    // ====== AUTH ======
     $("signup-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const email = $("signup-email").value.trim();
@@ -178,9 +179,8 @@
       auth.signOut().then(() => toast("Logged out"));
     });
 
-    // ========= POSTS =========
+    // ====== POSTS ======
     const postsContainer = $("posts-container");
-
     $("post-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const content = $("post-content").value.trim();
@@ -188,13 +188,12 @@
       const userEmail = auth.currentUser ? auth.currentUser.email : "Anonymous";
       await db.collection("posts").add({
         content,
-        contentLower: content.toLowerCase(), // for prefix search
+        contentLower: content.toLowerCase(),
         user: userEmail,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
       $("post-content").value = "";
     });
-
     db.collection("posts").orderBy("timestamp", "desc").limit(100)
       .onSnapshot((snapshot) => {
         postsContainer.innerHTML = "";
@@ -208,9 +207,8 @@
         });
       });
 
-    // ========= CHAT =========
+    // ====== CHAT ======
     const chatContainer = $("chat-container");
-
     $("chat-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const message = $("chat-message").value.trim();
@@ -225,7 +223,6 @@
       });
       $("chat-message").value = "";
     });
-
     db.collection("chats").orderBy("timestamp", "asc").limit(200)
       .onSnapshot((snapshot) => {
         chatContainer.innerHTML = "";
@@ -238,29 +235,16 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
       });
 
-    // ========= SEARCH (prefix search with startAt/endAt) =========
+    // ====== SEARCH ======
     const searchInput = $("search-input");
     const searchBtn = $("search-btn");
     const searchResults = $("search-results");
-
-    const debounce = (fn, ms=300) => {
-      let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
-    };
-
     async function performSearchCore() {
       const q = searchInput.value.trim().toLowerCase();
       searchResults.innerHTML = "";
       if (!q) return;
-
       const end = q + "\uf8ff";
-
-      // Search posts by contentLower (prefix)
-      const postsSnap = await db.collection("posts")
-        .orderBy("contentLower")
-        .startAt(q).endAt(end)
-        .limit(20)
-        .get();
-
+      const postsSnap = await db.collection("posts").orderBy("contentLower").startAt(q).endAt(end).limit(20).get();
       if (!postsSnap.empty) {
         const h = document.createElement("div");
         h.innerHTML = "<h3>Posts</h3>";
@@ -272,17 +256,9 @@
         div.innerHTML = `<strong>Post:</strong> ${post.content} <span class="muted">— ${post.user}</span>`;
         searchResults.appendChild(div);
       });
-
-      // Search users from chat by userLower (prefix)
-      const usersSnap = await db.collection("chats")
-        .orderBy("userLower")
-        .startAt(q).endAt(end)
-        .limit(50)
-        .get();
-
+      const usersSnap = await db.collection("chats").orderBy("userLower").startAt(q).endAt(end).limit(50).get();
       const users = new Set();
       usersSnap.forEach(d => users.add(d.data().user));
-
       if (users.size) {
         const h2 = document.createElement("div");
         h2.innerHTML = "<h3>Users</h3>";
@@ -294,24 +270,17 @@
         searchResults.appendChild(div);
       });
     }
-
-    const performSearch = debounce(performSearchCore, 350);
-    searchInput.addEventListener("input", performSearch);
+    searchInput.addEventListener("input", performSearchCore);
     searchBtn.addEventListener("click", (e) => { e.preventDefault(); performSearchCore(); });
 
-    // ========= LOCATION / MAPS =========
-    const shareLocationBtn = $("share-location-btn");
-    let map;
-
-    shareLocationBtn.addEventListener("click", () => {
+    // ====== LOCATION ======
+    $("share-location-btn").addEventListener("click", () => {
       if (!navigator.geolocation) return toast("Geolocation not supported");
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
-
-        map = new google.maps.Map($("map"), { center: {lat, lng}, zoom: 15 });
+        const map = new google.maps.Map($("map"), { center: {lat, lng}, zoom: 15 });
         new google.maps.Marker({ position: {lat, lng}, map, title: "You are here!" });
-
         const userEmail = auth.currentUser ? auth.currentUser.email : "Anonymous";
         await db.collection("locations").add({
           user: userEmail,
@@ -319,23 +288,18 @@
           longitude: lng,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-      }, (err) => {
-        toast(err.message || "Unable to get location");
-      });
+      }, (err) => { toast(err.message || "Unable to get location"); });
     });
 
-    // ========= PAYMENTS (Flutterwave UGX Mobile Money) =========
+    // ====== FLUTTERWAVE PAYMENTS ======
     const FLW_PUBLIC_KEY = "REPLACE_ME_FLUTTERWAVE_PUBLIC_KEY";
-
     $("pay-btn").addEventListener("click", () => {
       const amount = parseInt($("amount-ugx").value, 10);
       const phone = $("phone-number").value.trim();
       const email = auth.currentUser ? auth.currentUser.email : "guest@ipr.com";
       const name = auth.currentUser ? auth.currentUser.email : "Anonymous";
-
       if (!amount || amount < 100) return toast("Enter a valid amount (>= 100 UGX).");
       if (!/^\d{9,15}$/.test(phone)) return toast("Enter a valid phone number (digits only, e.g., 2567XXXXXXXX).");
-
       FlutterwaveCheckout({
         public_key: FLW_PUBLIC_KEY,
         tx_ref: "tx-" + Date.now(),
@@ -343,9 +307,7 @@
         currency: "UGX",
         payment_options: "mobilemoneyuganda",
         customer: { email, phonenumber: phone, name },
-        meta: { app: "iPrincesses", env: "web" },
         callback: async function (data) {
-          // Persist a simple payment record
           await db.collection("payments").add({
             status: data.status,
             tx_id: data.transaction_id || null,
@@ -356,23 +318,9 @@
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
           toast("Payment " + (data.status || "processed"));
-        },
-        onclose: function () {
-          console.log("Payment modal closed");
         }
       });
     });
-
-    // ========= QUICK TIPS =========
-    // Firestore Security Rules to consider (set these in Firebase Console):
-    // service cloud.firestore {
-    //   match /databases/{database}/documents {
-    //     match /{document=**} {
-    //       allow read: if true;
-    //       allow write: if request.auth != null; // only logged-in users can write
-    //     }
-    //   }
-    // }
   </script>
 </body>
 </html>
