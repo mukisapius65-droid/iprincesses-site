@@ -50,16 +50,18 @@
   <div id="search-results"></div>
 
   <!-- Posts -->
-  <h2>Posts</h2>
-  <div id="posts-container"></div>
-  <form id="post-form" class="row">
-    <div class="col">
-      <input type="text" id="post-content" placeholder="Create a post..." required />
-    </div>
-    <div class="col" style="flex:0 0 auto;">
-      <button type="submit">Post</button>
-    </div>
-  </form>
+<h2>Posts</h2>
+<div id="posts-container"></div>
+<form id="post-form" class="row" enctype="multipart/form-data">
+  <div class="col">
+    <input type="text" id="post-content" placeholder="Create a post..." />
+    <input type="file" id="post-file" accept="image/*,video/*,.pdf,.doc,.docx" />
+    <div class="help">You can attach an image, video, or document.</div>
+  </div>
+  <div class="col" style="flex:0 0 auto;">
+    <button type="submit">Post</button>
+  </div>
+</form>
 
   <!-- Chat -->
   <h2>Chat</h2>
@@ -105,18 +107,61 @@
 
     // ====== POSTS ======
     const postsContainer = $("posts-container");
-    $("post-form").addEventListener("submit", async e => {
-      e.preventDefault();
-      const content = $("post-content").value.trim();
-      if (!content) return;
-      await db.collection("posts").add({
-        content,
-        contentLower: content.toLowerCase(),
-        user: "Anonymous",
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      $("post-content").value = "";
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script>
+  const storage = firebase.storage();
+
+  $("post-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const content = $("post-content").value.trim();
+    const file = $("post-file").files[0];
+    let fileUrl = null, fileType = null;
+
+    if (file) {
+      const storageRef = storage.ref("uploads/" + Date.now() + "_" + file.name);
+      await storageRef.put(file);
+      fileUrl = await storageRef.getDownloadURL();
+      fileType = file.type;
+    }
+
+    await db.collection("posts").add({
+      content,
+      contentLower: content.toLowerCase(),
+      user: "Anonymous",
+      fileUrl,
+      fileType,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
+
+    $("post-content").value = "";
+    $("post-file").value = "";
+  });
+
+  db.collection("posts").orderBy("timestamp", "desc").limit(100)
+    .onSnapshot(snapshot => {
+      postsContainer.innerHTML = "";
+      snapshot.forEach(doc => {
+        const post = doc.data();
+        const div = document.createElement("div");
+        div.className="post";
+        const when = post.timestamp?.toDate?.() ? new Date(post.timestamp.toDate()).toLocaleString() : "just now";
+
+        let media = "";
+        if (post.fileUrl) {
+          if (post.fileType.startsWith("image/")) {
+            media = `<br><img src="${post.fileUrl}" style="max-width:100%;border-radius:6px;">`;
+          } else if (post.fileType.startsWith("video/")) {
+            media = `<br><video controls style="max-width:100%;border-radius:6px;"><source src="${post.fileUrl}" type="${post.fileType}"></video>`;
+          } else {
+            media = `<br><a href="${post.fileUrl}" target="_blank">📄 Download document</a>`;
+          }
+        }
+
+        div.innerHTML = `<strong>${post.user}</strong> <span class="muted">• ${when}</span><br/>${post.content || ""}${media}`;
+        postsContainer.appendChild(div);
+      });
+    });
+</script>
     db.collection("posts").orderBy("timestamp", "desc").limit(100)
       .onSnapshot(snapshot => {
         postsContainer.innerHTML = "";
