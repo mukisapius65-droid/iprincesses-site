@@ -1,326 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iPrincesses - Home</title>
-  <style>
-    :root { --brand:#e91e63; }
-    body { font-family: Arial, sans-serif; margin: 1rem; }
-    h1,h2 { color: var(--brand); margin-bottom: .5rem; }
-    #chat-container, #search-results, #map, #posts-container { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; max-height:300px; overflow-y:auto; border-radius:8px; }
-    input, button { padding: 0.6rem 0.75rem; margin: 0.3rem 0; border-radius:6px; border:1px solid #ccc; }
-    button { cursor:pointer; background: var(--brand); color:#fff; border: none; }
-    button.secondary { background: #f5f5f5; color:#333; border:1px solid #ddd; }
-    .row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
-    .col { flex:1 1 300px; min-width:280px; }
-    .post { border-bottom: 1px solid #eee; padding: 0.5rem 0; }
-    .muted { color:#777; font-size:.9rem; }
-    .search-container { position: relative; width: 100%; max-width: 420px; }
-    #search-input { width: 100%; padding-right: 40px; }
-    #search-btn { position: absolute; right: 0; top: 0; bottom: 0; background: none; border: none; padding: 0 10px; cursor: pointer; }
-    #search-btn img { width: 20px; height: 20px; }
-    #logout-btn { display:none; }
-    .hidden { display:none !important; }
-    .pill { display:inline-block; background:#ffe3ec; color:#ad1457; padding:2px 8px; border-radius:999px; font-size:.75rem; margin-left:.5rem; }
-    .inline { display:inline-flex; gap:.5rem; align-items:center; }
-    .field { display:flex; flex-direction:column; margin-bottom:.5rem; }
-    .help { font-size: .85rem; color:#666; }
-  </style>
-</head>
-<body>
-  <h1>Welcome to iPrincesses ❤️ <span class="pill">Beta</span></h1>
+<!-- Posts -->
+<h2>Posts</h2>
+<div id="posts-container"></div>
 
-  <!-- Auth + Profile -->
-  <div id="auth-section" class="row">
-    <div class="col">
-      <h2>Sign Up</h2>
-      <form id="signup-form">
-        <div class="field">
-          <input type="email" id="signup-email" placeholder="Enter email" required />
-        </div>
-        <div class="field">
-          <input type="password" id="signup-password" placeholder="Enter password" required />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
+<!-- Floating Add Post Button -->
+<button id="add-post-btn" style="
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+">+</button>
 
-    <div class="col">
-      <h2>Login</h2>
-      <form id="login-form">
-        <div class="field">
-          <input type="email" id="login-email" placeholder="Enter email" required />
-        </div>
-        <div class="field">
-          <input type="password" id="login-password" placeholder="Enter password" required />
-        </div>
-        <button type="submit">Login</button>
-        <button id="logout-btn" type="button" class="secondary">Logout</button>
-      </form>
-      <div id="whoami" class="muted hidden"></div>
-    </div>
-
-    <div class="col">
-      <h2>Payment Profile</h2>
-      <div class="field">
-        <input type="tel" id="phone-number" placeholder="Your phone number (e.g., 2567XXXXXXXX)" />
-        <div class="help">Used for Mobile Money payments via Flutterwave (UGX).</div>
-      </div>
-      <div class="inline">
-        <input type="number" id="amount-ugx" placeholder="Amount (UGX)" min="100" step="100" value="5000" />
-        <button id="pay-btn" type="button">Pay via Mobile Money (UG)</button>
-      </div>
+<!-- Hidden Add Post Modal -->
+<div id="post-modal" class="hidden" style="
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+">
+  <div style="
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+  ">
+    <h3>Create a post</h3>
+    <input type="text" id="modal-post-content" placeholder="Write something..." style="width:100%; padding:0.5rem; margin-bottom:0.5rem;" />
+    <div style="text-align:right;">
+      <button id="modal-post-cancel" class="secondary">Cancel</button>
+      <button id="modal-post-submit">Post</button>
     </div>
   </div>
-
-  <!-- Search -->
-  <h2>Search</h2>
-  <div class="search-container">
-    <input type="text" id="search-input" placeholder="Search posts or users (prefix match)…" />
-    <button id="search-btn" title="Search">
-      <img src="https://raw.githubusercontent.com/octokit/octokit.rb/master/octokit.gemspec" onerror="this.src='';this.alt='Search';" alt="Search" />
-    </button>
-  </div>
-  <div id="search-results"></div>
-
-  <!-- Posts -->
-  <h2>Posts</h2>
-  <div id="posts-container"></div>
-  <form id="post-form" class="row">
-    <div class="col">
-      <input type="text" id="post-content" placeholder="Create a post..." required />
-    </div>
-    <div class="col" style="flex:0 0 auto;">
-      <button type="submit">Post</button>
-    </div>
-  </form>
-
-  <!-- Chat -->
-  <h2>Chat</h2>
-  <div id="chat-container"></div>
-  <form id="chat-form" class="row">
-    <div class="col">
-      <input type="text" id="chat-message" placeholder="Type a message..." required />
-    </div>
-    <div class="col" style="flex:0 0 auto;">
-      <button type="submit">Send</button>
-    </div>
-  </form>
-
-  <!-- Location -->
-  <h2>Share Your Location</h2>
-  <div class="inline">
-    <button id="share-location-btn" type="button">Share My Location</button>
-    <span class="muted">We’ll drop a pin on the map and store coordinates with your account.</span>
-  </div>
-  <div id="map" style="height:300px; width:100%;"></div>
-
-  <!-- SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=REPLACE_ME_GOOGLE_MAPS_API_KEY"></script>
-  <script src="https://checkout.flutterwave.com/v3.js"></script>
-
-  <script>
-    // ========= Firebase Config =========
-    const firebaseConfig = {
-      apiKey: "AIzaSyBE7nyRgJU3-VEvnx_MgUJFcN7Qz04yT0g",
-      authDomain: "iprincesses-f4f94.firebaseapp.com",
-      projectId: "iprincesses-f4f94",
-      storageBucket: "iprincesses-f4f94.appspot.com", // ✅ fixed
-      messagingSenderId: "867887611060",
-      appId: "1:867887611060:web:f5c15533019c98d4c26be1",
-      measurementId: "G-7C9VZKX8MW"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // ====== UI Helpers ======
-    const $ = (id) => document.getElementById(id);
-    const toast = (msg) => alert(msg);
-    const whoamiEl = $("whoami");
-    const logoutBtn = $("logout-btn");
-
-    auth.onAuthStateChanged((user) => {
-      const loggedIn = !!user;
-      logoutBtn.style.display = loggedIn ? "inline-block" : "none";
-      if (loggedIn) {
-        whoamiEl.classList.remove("hidden");
-        whoamiEl.textContent = `Logged in as ${user.email}`;
-      } else {
-        whoamiEl.classList.add("hidden");
-        whoamiEl.textContent = "";
-      }
-    });
-
-    // ====== AUTH ======
-    $("signup-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = $("signup-email").value.trim();
-      const password = $("signup-password").value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => toast("Signup successful!"))
-        .catch(err => toast(err.message));
-    });
-
-    $("login-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = $("login-email").value.trim();
-      const password = $("login-password").value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => toast("Login successful!"))
-        .catch(err => toast(err.message));
-    });
-
-    logoutBtn.addEventListener("click", () => {
-      auth.signOut().then(() => toast("Logged out"));
-    });
-
-    // ====== POSTS ======
-    const postsContainer = $("posts-container");
-    $("post-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const content = $("post-content").value.trim();
-      if (!content) return;
-      const userEmail = auth.currentUser ? auth.currentUser.email : "Anonymous";
-      await db.collection("posts").add({
-        content,
-        contentLower: content.toLowerCase(),
-        user: userEmail,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      $("post-content").value = "";
-    });
-    db.collection("posts").orderBy("timestamp", "desc").limit(100)
-      .onSnapshot((snapshot) => {
-        postsContainer.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const post = doc.data();
-          const div = document.createElement("div");
-          div.className="post";
-          const when = post.timestamp?.toDate?.() ? new Date(post.timestamp.toDate()).toLocaleString() : "just now";
-          div.innerHTML = `<strong>${post.user}</strong> <span class="muted">• ${when}</span><br/>${post.content}`;
-          postsContainer.appendChild(div);
-        });
-      });
-
-    // ====== CHAT ======
-    const chatContainer = $("chat-container");
-    $("chat-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const message = $("chat-message").value.trim();
-      if (!message) return;
-      const userEmail = auth.currentUser ? auth.currentUser.email : "Anonymous";
-      await db.collection("chats").add({
-        message,
-        messageLower: message.toLowerCase(),
-        user: userEmail,
-        userLower: userEmail.toLowerCase(),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      $("chat-message").value = "";
-    });
-    db.collection("chats").orderBy("timestamp", "asc").limit(200)
-      .onSnapshot((snapshot) => {
-        chatContainer.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const chat = doc.data();
-          const div = document.createElement("div");
-          div.innerHTML = `<strong>${chat.user}:</strong> ${chat.message}`;
-          chatContainer.appendChild(div);
-        });
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      });
-
-    // ====== SEARCH ======
-    const searchInput = $("search-input");
-    const searchBtn = $("search-btn");
-    const searchResults = $("search-results");
-    async function performSearchCore() {
-      const q = searchInput.value.trim().toLowerCase();
-      searchResults.innerHTML = "";
-      if (!q) return;
-      const end = q + "\uf8ff";
-      const postsSnap = await db.collection("posts").orderBy("contentLower").startAt(q).endAt(end).limit(20).get();
-      if (!postsSnap.empty) {
-        const h = document.createElement("div");
-        h.innerHTML = "<h3>Posts</h3>";
-        searchResults.appendChild(h);
-      }
-      postsSnap.forEach(doc => {
-        const post = doc.data();
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>Post:</strong> ${post.content} <span class="muted">— ${post.user}</span>`;
-        searchResults.appendChild(div);
-      });
-      const usersSnap = await db.collection("chats").orderBy("userLower").startAt(q).endAt(end).limit(50).get();
-      const users = new Set();
-      usersSnap.forEach(d => users.add(d.data().user));
-      if (users.size) {
-        const h2 = document.createElement("div");
-        h2.innerHTML = "<h3>Users</h3>";
-        searchResults.appendChild(h2);
-      }
-      users.forEach(user => {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>User:</strong> ${user}`;
-        searchResults.appendChild(div);
-      });
-    }
-    searchInput.addEventListener("input", performSearchCore);
-    searchBtn.addEventListener("click", (e) => { e.preventDefault(); performSearchCore(); });
-
-    // ====== LOCATION ======
-    $("share-location-btn").addEventListener("click", () => {
-      if (!navigator.geolocation) return toast("Geolocation not supported");
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const map = new google.maps.Map($("map"), { center: {lat, lng}, zoom: 15 });
-        new google.maps.Marker({ position: {lat, lng}, map, title: "You are here!" });
-        const userEmail = auth.currentUser ? auth.currentUser.email : "Anonymous";
-        await db.collection("locations").add({
-          user: userEmail,
-          latitude: lat,
-          longitude: lng,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      }, (err) => { toast(err.message || "Unable to get location"); });
-    });
-
-    // ====== FLUTTERWAVE PAYMENTS ======
-    const FLW_PUBLIC_KEY = "REPLACE_ME_FLUTTERWAVE_PUBLIC_KEY";
-    $("pay-btn").addEventListener("click", () => {
-      const amount = parseInt($("amount-ugx").value, 10);
-      const phone = $("phone-number").value.trim();
-      const email = auth.currentUser ? auth.currentUser.email : "guest@ipr.com";
-      const name = auth.currentUser ? auth.currentUser.email : "Anonymous";
-      if (!amount || amount < 100) return toast("Enter a valid amount (>= 100 UGX).");
-      if (!/^\d{9,15}$/.test(phone)) return toast("Enter a valid phone number (digits only, e.g., 2567XXXXXXXX).");
-      FlutterwaveCheckout({
-        public_key: FLW_PUBLIC_KEY,
-        tx_ref: "tx-" + Date.now(),
-        amount: amount,
-        currency: "UGX",
-        payment_options: "mobilemoneyuganda",
-        customer: { email, phonenumber: phone, name },
-        callback: async function (data) {
-          await db.collection("payments").add({
-            status: data.status,
-            tx_id: data.transaction_id || null,
-            tx_ref: data.tx_ref,
-            amount,
-            currency: "UGX",
-            customer: { email, phone, name },
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          toast("Payment " + (data.status || "processed"));
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+</div>
