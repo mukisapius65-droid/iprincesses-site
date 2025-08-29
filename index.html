@@ -164,18 +164,6 @@
       });
     });
 </script>
-    db.collection("posts").orderBy("timestamp", "desc").limit(100)
-      .onSnapshot(snapshot => {
-        postsContainer.innerHTML = "";
-        snapshot.forEach(doc => {
-          const post = doc.data();
-          const div = document.createElement("div");
-          div.className="post";
-          const when = post.timestamp?.toDate?.() ? new Date(post.timestamp.toDate()).toLocaleString() : "just now";
-          div.innerHTML = `<strong>${post.user}</strong> <span class="muted">• ${when}</span><br/>${post.content}`;
-          postsContainer.appendChild(div);
-        });
-      });
 
     // ====== CHAT ======
     const chatContainer = $("chat-container");
