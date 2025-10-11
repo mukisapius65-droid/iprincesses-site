@@ -85,40 +85,72 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
+        /* Responsive Auth Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
 
-        .btn {
-            padding: 0.7rem 1.5rem;
-            border-radius: 30px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+.auth-btn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
 
-        .btn-primary {
-            background-color: white;
-            color: var(--primary);
-        }
+.login-btn {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
 
-        .btn-primary:hover {
-            background-color: var(--accent);
-            color: white;
-        }
+.login-btn:hover {
+    background-color: white;
+    color: #ff4d8d;
+}
 
-        .btn-outline {
-            background-color: transparent;
-            color: white;
-            border: 2px solid white;
-        }
+.signup-btn {
+    background-color: white;
+    color: #ff4d8d;
+}
 
-        .btn-outline:hover {
-            background-color: white;
-            color: var(--primary);
-        }
+.signup-btn:hover {
+    background-color: #ffb6c1;
+    color: white;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .auth-buttons {
+        gap: 0.5rem;
+    }
+    
+    .auth-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-buttons {
+        flex-direction: column;
+        gap: 0.3rem;
+        width: 100%;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+}
 
         /* Hamburger Menu */
         .hamburger {
