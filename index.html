@@ -1,271 +1,1523 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iPrincesses - Home</title>
-  <style>
-  .brand-title {
-  font-size: 4rem;         /* Extra large */
-  font-weight: 900;        /* Extra bold */
-  color: var(--brand);
-  text-align: center;      /* Center the title */
-  margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Subtle shadow */
-}
-.brand-title img {
-  vertical-align: middle;
-  height: 50px;            /* Slightly bigger princess icon */
-}
-  .pill {
-  background: #ff4da6;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 1rem;
-  vertical-align: middle;
-  margin-left: 5px;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPrincesses - Find Your Royal Match</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset and Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #ff4d8d;
+            --primary-dark: #e60073;
+            --secondary: #6a11cb;
+            --accent: #ffb6c1;
+            --light: #fff5f7;
+            --dark: #333333;
+            --gray: #888888;
+            --light-gray: #f5f5f5;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --brand: #ff4da6;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(rgba(255, 77, 141, 0.8), rgba(106, 17, 203, 0.8)), url('https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Brand Title */
+        .brand-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--brand);
+            text-align: center;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .pill {
+            background: #ff4da6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 1rem;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Profiles Section */
+        .profiles {
+            padding: 5rem 2rem;
+            background-color: var(--light-gray);
+        }
+
+        .profiles-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .profile-card:hover {
+            transform: scale(1.03);
+        }
+
+        .profile-img {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-info {
+            padding: 1.5rem;
+        }
+
+        .profile-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Dashboard Sidebar */
+        .dashboard-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            transition: var(--transition);
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .dashboard-sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* About Us Modal */
+        .about-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .about-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-content h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-content p {
+            margin-bottom: 1rem;
+        }
+
+        /* App Features Section */
+        .app-features {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .app-feature {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .app-feature h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .field {
+            margin-bottom: 1.5rem;
+        }
+
+        .field input, .field textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .field input:focus, .field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 77, 141, 0.2);
+        }
+
+        .help {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        .inline {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-container button {
+            padding: 0.8rem 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-container button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .muted {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        #posts-container, #chat-container, #search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+        }
+
+        .post {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+                display: none;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .auth-buttons {
+                margin-left: auto;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .brand-title {
+                font-size: 2.5rem;
+            }
+
+            .inline {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1 class="brand-title">
-  iPrincesses 
-  <img src="princess.png" alt="Princess" style="height:50px; vertical-align:middle; margin-left:8px;">
-  <span class="pill">Beta</span>
-</h1>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>iPrincesses</span>
+            </div>
+            
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#app-features">Features</a></li>
+                    <li><a href="#profiles">Profiles</a></li>
+                    <li><a href="#chat">Messages</a></li>
+                    <li><a href="#" id="about-link">About Us</a></li>
+                </ul>
+            </nav>
+            
+            <div class="auth-buttons">
+                <button class="btn btn-outline">Log In</button>
+                <button class="btn btn-primary">Sign Up</button>
+            </div>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
 
-  <!-- Payment -->
-  <h2>Payment Profile</h2>
-  <div class="field">
-    <input type="tel" id="phone-number" placeholder="Your phone number (e.g., 2567XXXXXXXX)" />
-    <div class="help">Used for Mobile Money payments via Flutterwave (UGX).</div>
-  </div>
-  <div class="inline">
-    <input type="number" id="amount-ugx" placeholder="Amount (UGX)" min="100" step="100" value="50000" />
-    <button id="pay-btn" type="button">Pay via Mobile Money (UG)</button>
-  </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="brand-title">
+                iPrincesses 
+                <i class="fas fa-crown"></i>
+                <span class="pill">Beta</span>
+            </h1>
+            <p>iPrincesses connects you with amazing singles looking for meaningful relationships. Join our royal community today!</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">Create Profile</button>
+                <button class="btn btn-outline">Take a Tour</button>
+            </div>
+        </div>
+    </section>
 
-  <!-- Search -->
-  <h2>Search</h2>
-  <div class="search-container">
-    <input type="text" id="search-input" placeholder="Search posts or users (prefix match)…" />
-    <button id="search-btn" title="Search">
-      <img src="" alt="Search" />
-    </button>
-  </div>
-  <div id="search-results"></div>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="section-title">
+            <h2>Why Choose iPrincesses?</h2>
+            <p>Our platform offers unique features designed to help you find your perfect match</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Smart Matching</h3>
+                <p>Our advanced algorithm finds compatible partners based on your preferences and personality.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Verified Profiles</h3>
+                <p>All profiles are verified to ensure authenticity and create a safe dating environment.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3>Video Dates</h3>
+                <p>Connect face-to-face with our secure video dating feature before meeting in person.</p>
+            </div>
+        </div>
+    </section>
 
-  <!-- Posts -->
-<h2>Posts</h2>
-<div id="posts-container"></div>
-<form id="post-form" class="row" enctype="multipart/form-data">
-  <div class="col">
-    <input type="text" id="post-content" placeholder="Create a post..." />
-    <input type="file" id="post-file" accept="image/*,video/*,.pdf,.doc,.docx" />
-    <div class="help">You can attach an image, video, or document.</div>
-  </div>
-  <div class="col" style="flex:0 0 auto;">
-    <button type="submit">Post</button>
-  </div>
-</form>
+    <!-- Profiles Section -->
+    <section class="profiles" id="profiles">
+        <div class="profiles-container">
+            <div class="section-title">
+                <h2>Featured Princesses</h2>
+                <p>Meet some of our amazing members looking for their prince charming</p>
+            </div>
+            
+            <div class="profiles-grid">
+                <div class="profile-card">
+                    <div class="profile-img" style="background-image: url('https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80');"></div>
+                    <div class="profile-info">
+                        <h3>Sophia, 28</h3>
+                        <p>Art Director • New York</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Match</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">2km</div>
+                                <div class="stat-label">Away</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">24</div>
+                                <div class="stat-label">Photos</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;">View Profile</button>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-img" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80');"></div>
+                    <div class="profile-info">
+                        <h3>Emma, 26</h3>
+                        <p>Marketing Manager • London</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value">92%</div>
+                                <div class="stat-label">Match</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">5km</div>
+                                <div class="stat-label">Away</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">18</div>
+                                <div class="stat-label">Photos</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;">View Profile</button>
+                    </div>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-img" style="background-image: url('https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80');"></div>
+                    <div class="profile-info">
+                        <h3>Olivia, 30</h3>
+                        <p>Software Engineer • San Francisco</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value">78%</div>
+                                <div class="stat-label">Match</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">10km</div>
+                                <div class="stat-label">Away</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">21</div>
+                                <div class="stat-label">Photos</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;">View Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Chat -->
-  <h2>Chat</h2>
-  <div id="chat-container"></div>
-  <form id="chat-form" class="row">
-    <div class="col">
-      <input type="text" id="chat-message" placeholder="Type a message..." required />
+    <!-- App Features Section -->
+    <section class="app-features" id="app-features">
+        <div class="section-title">
+            <h2>iPrincesses Features</h2>
+            <p>Explore all the amazing features our platform offers</p>
+        </div>
+        
+        <div class="app-features-grid">
+            <!-- Payment Feature -->
+            <div class="app-feature">
+                <h3>Payment Profile</h3>
+                <div class="field">
+                    <input type="tel" id="phone-number" placeholder="Your phone number (e.g., 2567XXXXXXXX)" />
+                    <div class="help">Used for Mobile Money payments via Flutterwave (UGX).</div>
+                </div>
+                <div class="inline">
+                    <input type="number" id="amount-ugx" placeholder="Amount (UGX)" min="100" step="100" value="50000" />
+                    <button id="pay-btn" type="button" class="btn btn-primary">Pay via Mobile Money (UG)</button>
+                </div>
+            </div>
+            
+            <!-- Search Feature -->
+            <div class="app-feature">
+                <h3>Search</h3>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search posts or users (prefix match)…" />
+                    <button id="search-btn" title="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+            
+            <!-- Posts Feature -->
+            <div class="app-feature">
+                <h3>Posts</h3>
+                <div id="posts-container"></div>
+                <form id="post-form" class="row" enctype="multipart/form-data">
+                    <div class="col">
+                        <input type="text" id="post-content" placeholder="Create a post..." />
+                        <input type="file" id="post-file" accept="image/*,video/*,.pdf,.doc,.docx" />
+                        <div class="help">You can attach an image, video, or document.</div>
+                    </div>
+                    <div class="col" style="flex:0 0 auto;">
+                        <button type="submit" class="btn btn-primary">Post</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Chat Feature -->
+            <div class="app-feature" id="chat">
+                <h3>Chat</h3>
+                <div id="chat-container"></div>
+                <form id="chat-form" class="row">
+                    <div class="col">
+                        <input type="text" id="chat-message" placeholder="Type a message..." required />
+                    </div>
+                    <div class="col" style="flex:0 0 auto;">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Location Feature -->
+            <div class="app-feature">
+                <h3>Share Your Location</h3>
+                <div class="inline">
+                    <button id="share-location-btn" type="button" class="btn btn-primary">Share My Location</button>
+                    <span class="muted">We'll drop a pin on the map and store coordinates with your account.</span>
+                </div>
+                <div id="map"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Sidebar -->
+    <div class="dashboard-sidebar" id="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>My Dashboard</h3>
+            <button class="sidebar-close" id="sidebar-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a href="#"><i class="fas fa-heart"></i> Matches</a></li>
+            <li><a href="#"><i class="fas fa-comments"></i> Messages</a></li>
+            <li><a href="#"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
     </div>
-    <div class="col" style="flex:0 0 auto;">
-      <button type="submit">Send</button>
+
+    <!-- About Us Modal -->
+    <div class="about-modal" id="about-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>About iPrincesses</h2>
+            <p>Welcome to iPrincesses, where modern romance meets royal treatment. Founded in 2020, our mission is to create meaningful connections in a safe, respectful environment.</p>
+            
+            <p>We believe that everyone deserves to find their perfect match, and our platform is designed to make that process enjoyable and successful. With advanced matching algorithms, verified profiles, and a focus on user safety, iPrincesses stands out in the online dating world.</p>
+            
+            <h3>Our Values</h3>
+            <p><strong>Authenticity:</strong> We encourage genuine connections between real people.</p>
+            <p><strong>Safety:</strong> Your security and privacy are our top priorities.</p>
+            <p><strong>Respect:</strong> We foster a community built on mutual respect and kindness.</p>
+            <p><strong>Innovation:</strong> We continuously improve our platform to enhance your dating experience.</p>
+            
+            <h3>Join Our Community</h3>
+            <p>Whether you're looking for a serious relationship or meaningful connections, iPrincesses offers a premium dating experience tailored to your needs. Join thousands of successful couples who found love through our platform.</p>
+        </div>
     </div>
-  </form>
 
-  <!-- Location -->
-  <h2>Share Your Location</h2>
-  <div class="inline">
-    <button id="share-location-btn" type="button">Share My Location</button>
-    <span class="muted">We’ll drop a pin on the map and store coordinates with your account.</span>
-  </div>
-  <div id="map" style="height:300px; width:100%;"></div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>iPrincesses</h3>
+                <p>Find your royal match with our premium dating platform designed for meaningful connections.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#app-features">Features</a></li>
+                    <li><a href="#profiles">Profiles</a></li>
+                    <li><a href="#chat">Messages</a></li>
+                    <li><a href="#" id="about-footer-link">About Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Download App</h3>
+                <p>Get the iPrincesses app for a better mobile experience.</p>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fab fa-apple"></i> App Store
+                    </button>
+                    <button class="btn btn-primary" style="width: 100%;">
+                        <i class="fab fa-google-play"></i> Google Play
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 iPrincesses. All rights reserved.</p>
+        </div>
+    </footer>
 
-  <!-- SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=REPLACE_ME_GOOGLE_MAPS_API_KEY"></script>
-  <script src="https://checkout.flutterwave.com/v3.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBE7nyRgJU3-VEvnx_MgUJFcN7Qz04yT0g",
-      authDomain: "iprincesses-f4f94.firebaseapp.com",
-      projectId: "iprincesses-f4f94",
-      storageBucket: "iprincesses-f4f94.appspot.com",
-      messagingSenderId: "867887611060",
-      appId: "1:867887611060:web:f5c15533019c98d4c26be1",
-      measurementId: "G-7C9VZKX8MW"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    <!-- SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=REPLACE_ME_GOOGLE_MAPS_API_KEY"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
 
-    const $ = id => document.getElementById(id);
-    const toast = msg => alert(msg);
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBE7nyRgJU3-VEvnx_MgUJFcN7Qz04yT0g",
+            authDomain: "iprincesses-f4f94.firebaseapp.com",
+            projectId: "iprincesses-f4f94",
+            storageBucket: "iprincesses-f4f94.appspot.com",
+            messagingSenderId: "867887611060",
+            appId: "1:867887611060:web:f5c15533019c98d4c26be1",
+            measurementId: "G-7C9VZKX8MW"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-    // ====== POSTS ======
-    const postsContainer = $("posts-container");
-  const storage = firebase.storage();
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const mainNav = document.getElementById('main-nav');
+        const dashboardSidebar = document.getElementById('dashboard-sidebar');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const aboutLink = document.getElementById('about-link');
+        const aboutFooterLink = document.getElementById('about-footer-link');
+        const aboutModal = document.getElementById('about-modal');
+        const modalClose = document.getElementById('modal-close');
 
-  $("post-form").addEventListener("submit", async e => {
-    e.preventDefault();
-    const content = $("post-content").value.trim();
-    const file = $("post-file").files[0];
-    let fileUrl = null, fileType = null;
+        // Utility Functions
+        const $ = id => document.getElementById(id);
+        const toast = msg => {
+            // Create a simple toast notification
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 30px;
+                z-index: 10000;
+                box-shadow: var(--shadow);
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        };
 
-    if (file) {
-      const storageRef = storage.ref("uploads/" + Date.now() + "_" + file.name);
-      await storageRef.put(file);
-      fileUrl = await storageRef.getDownloadURL();
-      fileType = file.type;
-    }
-
-    await db.collection("posts").add({
-      content,
-      contentLower: content.toLowerCase(),
-      user: "Anonymous",
-      fileUrl,
-      fileType,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    $("post-content").value = "";
-    $("post-file").value = "";
-  });
-
-  db.collection("posts").orderBy("timestamp", "desc").limit(100)
-    .onSnapshot(snapshot => {
-      postsContainer.innerHTML = "";
-      snapshot.forEach(doc => {
-        const post = doc.data();
-        const div = document.createElement("div");
-        div.className="post";
-        const when = post.timestamp?.toDate?.() ? new Date(post.timestamp.toDate()).toLocaleString() : "just now";
-
-        let media = "";
-        if (post.fileUrl) {
-          if (post.fileType.startsWith("image/")) {
-            media = `<br><img src="${post.fileUrl}" style="max-width:100%;border-radius:6px;">`;
-          } else if (post.fileType.startsWith("video/")) {
-            media = `<br><video controls style="max-width:100%;border-radius:6px;"><source src="${post.fileUrl}" type="${post.fileType}"></video>`;
-          } else {
-            media = `<br><a href="${post.fileUrl}" target="_blank">📄 Download document</a>`;
-          }
-        }
-
-        div.innerHTML = `<strong>${post.user}</strong> <span class="muted">• ${when}</span><br/>${post.content || ""}${media}`;
-        postsContainer.appendChild(div);
-      });
-    });
-
-    // ====== CHAT ======
-    const chatContainer = $("chat-container");
-    $("chat-form").addEventListener("submit", async e => {
-      e.preventDefault();
-      const message = $("chat-message").value.trim();
-      if (!message) return;
-      await db.collection("chats").add({
-        message,
-        messageLower: message.toLowerCase(),
-        user: "Anonymous",
-        userLower: "anonymous",
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      $("chat-message").value = "";
-    });
-    db.collection("chats").orderBy("timestamp", "asc").limit(200)
-      .onSnapshot(snapshot => {
-        chatContainer.innerHTML = "";
-        snapshot.forEach(doc => {
-          const chat = doc.data();
-          const div = document.createElement("div");
-          div.innerHTML = `<strong>${chat.user}:</strong> ${chat.message}`;
-          chatContainer.appendChild(div);
+        // ====== UI INTERACTIONS ======
+        // Toggle Mobile Navigation
+        hamburger.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            
+            // Transform hamburger to X
+            const spans = hamburger.querySelectorAll('span');
+            if (mainNav.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                
+                // Open dashboard sidebar on mobile
+                dashboardSidebar.classList.add('active');
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                
+                // Close dashboard sidebar
+                dashboardSidebar.classList.remove('active');
+            }
         });
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      });
 
-    // ====== SEARCH ======
-    const searchInput = $("search-input");
-    const searchBtn = $("search-btn");
-    const searchResults = $("search-results");
-    async function performSearchCore() {
-      const q = searchInput.value.trim().toLowerCase();
-      searchResults.innerHTML = "";
-      if (!q) return;
-      const end = q + "\uf8ff";
-      const postsSnap = await db.collection("posts").orderBy("contentLower").startAt(q).endAt(end).limit(20).get();
-      if (!postsSnap.empty) searchResults.innerHTML += "<h3>Posts</h3>";
-      postsSnap.forEach(doc => {
-        const post = doc.data();
-        searchResults.innerHTML += `<div><strong>Post:</strong> ${post.content} <span class="muted">— ${post.user}</span></div>`;
-      });
-      const usersSnap = await db.collection("chats").orderBy("userLower").startAt(q).endAt(end).limit(50).get();
-      const users = new Set();
-      usersSnap.forEach(d => users.add(d.data().user));
-      if (users.size) searchResults.innerHTML += "<h3>Users</h3>";
-      users.forEach(user => {
-        searchResults.innerHTML += `<div><strong>User:</strong> ${user}</div>`;
-      });
-    }
-    searchInput.addEventListener("input", performSearchCore);
-    searchBtn.addEventListener("click", e => { e.preventDefault(); performSearchCore(); });
-
-    // ====== LOCATION ======
-    $("share-location-btn").addEventListener("click", () => {
-      if (!navigator.geolocation) return toast("Geolocation not supported");
-      navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const map = new google.maps.Map($("map"), { center: {lat, lng}, zoom: 15 });
-        new google.maps.Marker({ position: {lat, lng}, map, title: "You are here!" });
-        await db.collection("locations").add({
-          user: "Anonymous",
-          latitude: lat,
-          longitude: lng,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        // Open Dashboard Sidebar
+        hamburger.addEventListener('click', () => {
+            dashboardSidebar.classList.add('active');
         });
-      }, err => toast(err.message || "Unable to get location"));
-    });
 
-    // ====== FLUTTERWAVE PAYMENTS ======
-    const FLW_PUBLIC_KEY = "REPLACE_ME_FLUTTERWAVE_PUBLIC_KEY";
-    $("pay-btn").addEventListener("click", () => {
-      const amount = parseInt($("amount-ugx").value, 10);
-      const phone = $("phone-number").value.trim();
-      const email = "guest@ipr.com";
-      const name = "Anonymous";
-      if (!amount || amount < 100) return toast("Enter a valid amount (>= 100 UGX).");
-      if (!/^\d{9,15}$/.test(phone)) return toast("Enter a valid phone number (digits only, e.g., 2567XXXXXXXX).");
-      FlutterwaveCheckout({
-        public_key: FLW_PUBLIC_KEY,
-        tx_ref: "tx-" + Date.now(),
-        amount: amount,
-        currency: "UGX",
-        payment_options: "mobilemoneyuganda",
-        customer: { email, phonenumber: phone, name },
-        callback: async data => {
-          await db.collection("payments").add({
-            status: data.status,
-            tx_id: data.transaction_id || null,
-            tx_ref: data.tx_ref,
-            amount,
-            currency: "UGX",
-            customer: { email, phone, name },
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          toast("Payment " + (data.status || "processed"));
+        // Close Dashboard Sidebar
+        sidebarClose.addEventListener('click', () => {
+            dashboardSidebar.classList.remove('active');
+            
+            // Reset hamburger
+            const spans = hamburger.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+            mainNav.classList.remove('active');
+        });
+
+        // Open About Modal
+        aboutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            aboutModal.classList.add('active');
+        });
+
+        aboutFooterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            aboutModal.classList.add('active');
+        });
+
+        // Close About Modal
+        modalClose.addEventListener('click', () => {
+            aboutModal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        aboutModal.addEventListener('click', (e) => {
+            if (e.target === aboutModal) {
+                aboutModal.classList.remove('active');
+            }
+        });
+
+        // ====== POSTS FUNCTIONALITY ======
+        const postsContainer = $("posts-container");
+
+        $("post-form").addEventListener("submit", async e => {
+            e.preventDefault();
+            const content = $("post-content").value.trim();
+            const file = $("post-file").files[0];
+            let fileUrl = null, fileType = null;
+
+            if (file) {
+                const storageRef = storage.ref("uploads/" + Date.now() + "_" + file.name);
+                await storageRef.put(file);
+                fileUrl = await storageRef.getDownloadURL();
+                fileType = file.type;
+            }
+
+            await db.collection("posts").add({
+                content,
+                contentLower: content.toLowerCase(),
+                user: "Anonymous",
+                fileUrl,
+                fileType,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            $("post-content").value = "";
+            $("post-file").value = "";
+            toast("Post created successfully!");
+        });
+
+        db.collection("posts").orderBy("timestamp", "desc").limit(100)
+            .onSnapshot(snapshot => {
+                postsContainer.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const div = document.createElement("div");
+                    div.className="post";
+                    const when = post.timestamp?.toDate?.() ? new Date(post.timestamp.toDate()).toLocaleString() : "just now";
+
+                    let media = "";
+                    if (post.fileUrl) {
+                        if (post.fileType.startsWith("image/")) {
+                            media = `<br><img src="${post.fileUrl}" style="max-width:100%;border-radius:6px;">`;
+                        } else if (post.fileType.startsWith("video/")) {
+                            media = `<br><video controls style="max-width:100%;border-radius:6px;"><source src="${post.fileUrl}" type="${post.fileType}"></video>`;
+                        } else {
+                            media = `<br><a href="${post.fileUrl}" target="_blank">📄 Download document</a>`;
+                        }
+                    }
+
+                    div.innerHTML = `<strong>${post.user}</strong> <span class="muted">• ${when}</span><br/>${post.content || ""}${media}`;
+                    postsContainer.appendChild(div);
+                });
+            });
+
+        // ====== CHAT FUNCTIONALITY ======
+        const chatContainer = $("chat-container");
+        $("chat-form").addEventListener("submit", async e => {
+            e.preventDefault();
+            const message = $("chat-message").value.trim();
+            if (!message) return;
+            await db.collection("chats").add({
+                message,
+                messageLower: message.toLowerCase(),
+                user: "Anonymous",
+                userLower: "anonymous",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            $("chat-message").value = "";
+        });
+        db.collection("chats").orderBy("timestamp", "asc").limit(200)
+            .onSnapshot(snapshot => {
+                chatContainer.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const chat = doc.data();
+                    const div = document.createElement("div");
+                    div.innerHTML = `<strong>${chat.user}:</strong> ${chat.message}`;
+                    chatContainer.appendChild(div);
+                });
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+
+        // ====== SEARCH FUNCTIONALITY ======
+        const searchInput = $("search-input");
+        const searchBtn = $("search-btn");
+        const searchResults = $("search-results");
+        async function performSearchCore() {
+            const q = searchInput.value.trim().toLowerCase();
+            searchResults.innerHTML = "";
+            if (!q) return;
+            const end = q + "\uf8ff";
+            const postsSnap = await db.collection("posts").orderBy("contentLower").startAt(q).endAt(end).limit(20).get();
+            if (!postsSnap.empty) searchResults.innerHTML += "<h3>Posts</h3>";
+            postsSnap.forEach(doc => {
+                const post = doc.data();
+                searchResults.innerHTML += `<div><strong>Post:</strong> ${post.content} <span class="muted">— ${post.user}</span></div>`;
+            });
+            const usersSnap = await db.collection("chats").orderBy("userLower").startAt(q).endAt(end).limit(50).get();
+            const users = new Set();
+            usersSnap.forEach(d => users.add(d.data().user));
+            if (users.size) searchResults.innerHTML += "<h3>Users</h3>";
+            users.forEach(user => {
+                searchResults.innerHTML += `<div><strong>User:</strong> ${user}</div>`;
+            });
         }
-      });
-    });
-  </script>
+        searchInput.addEventListener("input", performSearchCore);
+        searchBtn.addEventListener("click", e => { e.preventDefault(); performSearchCore(); });
+
+        // ====== LOCATION FUNCTIONALITY ======
+        $("share-location-btn").addEventListener("click", () => {
+            if (!navigator.geolocation) return toast("Geolocation not supported");
+            navigator.geolocation.getCurrentPosition(async pos => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                const map = new google.maps.Map($("map"), { 
+                    center: {lat, lng}, 
+                    zoom: 15,
+                    styles: [
+                        {
+                            "featureType": "all",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "weight": "2.00"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "all",
+                            "elementType": "geometry.stroke",
+                            "stylers": [
+                                {
+                                    "color": "#9c9c9c"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "all",
+                            "elementType": "labels.text",
+                            "stylers": [
+                                {
+                                    "visibility": "on"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "landscape",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "color": "#f2f2f2"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "landscape",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#ffffff"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "landscape.man_made",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#ffffff"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "poi",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "saturation": -100
+                                },
+                                {
+                                    "lightness": 45
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#eeeeee"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "labels.text.fill",
+                            "stylers": [
+                                {
+                                    "color": "#7b7b7b"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road",
+                            "elementType": "labels.text.stroke",
+                            "stylers": [
+                                {
+                                    "color": "#ffffff"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "visibility": "simplified"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.arterial",
+                            "elementType": "labels.icon",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "transit",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "color": "#46bcec"
+                                },
+                                {
+                                    "visibility": "on"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#c8d7d4"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "labels.text.fill",
+                            "stylers": [
+                                {
+                                    "color": "#070707"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "labels.text.stroke",
+                            "stylers": [
+                                {
+                                    "color": "#ffffff"
+                                }
+                            ]
+                        }
+                    ]
+                });
+                new google.maps.Marker({ 
+                    position: {lat, lng}, 
+                    map, 
+                    title: "You are here!",
+                    icon: {
+                        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+                            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="10" cy="10" r="8" fill="${encodeURIComponent('#ff4d8d')}" stroke="white" stroke-width="2"/>
+                            </svg>
+                        `)
+                    }
+                });
+                await db.collection("locations").add({
+                    user: "Anonymous",
+                    latitude: lat,
+                    longitude: lng,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                toast("Location shared successfully!");
+            }, err => toast(err.message || "Unable to get location"));
+        });
+
+        // ====== FLUTTERWAVE PAYMENTS ======
+        const FLW_PUBLIC_KEY = "REPLACE_ME_FLUTTERWAVE_PUBLIC_KEY";
+        $("pay-btn").addEventListener("click", () => {
+            const amount = parseInt($("amount-ugx").value, 10);
+            const phone = $("phone-number").value.trim();
+            const email = "guest@ipr.com";
+            const name = "Anonymous";
+            if (!amount || amount < 100) return toast("Enter a valid amount (>= 100 UGX).");
+            if (!/^\d{9,15}$/.test(phone)) return toast("Enter a valid phone number (digits only, e.g., 2567XXXXXXXX).");
+            FlutterwaveCheckout({
+                public_key: FLW_PUBLIC_KEY,
+                tx_ref: "tx-" + Date.now(),
+                amount: amount,
+                currency: "UGX",
+                payment_options: "mobilemoneyuganda",
+                customer: { email, phonenumber: phone, name },
+                callback: async data => {
+                    await db.collection("payments").add({
+                        status: data.status,
+                        tx_id: data.transaction_id || null,
+                        tx_ref: data.tx_ref,
+                        amount,
+                        currency: "UGX",
+                        customer: { email, phone, name },
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    toast("Payment " + (data.status || "processed"));
+                }
+            });
+        });
+
+        // Add some interactive effects to profile cards
+        document.querySelectorAll('.profile-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'var(--shadow)';
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
